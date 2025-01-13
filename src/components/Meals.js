@@ -3,6 +3,7 @@ const Meals = () => {
         <ul id="meals">
             { 
                 // list of meals
+                
             }
         </ul>
     )
