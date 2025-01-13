@@ -7,7 +7,6 @@ import { useContext, useState } from 'react'
 const Header = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { items } = useContext(Cart);
-
       
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -31,7 +30,7 @@ const Header = () => {
             <Button textOnly={true} onClick={handleOpenModal} children={`Cart (${totalQuant})`} />
             </nav>
 
-            <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
+            <Modal isOpen={isModalOpen} onClose={handleCloseModal} elements={items} />
         </header>
     )
 }

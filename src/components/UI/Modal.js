@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-
-const Modal = ({ isOpen, onClose, message }) => {
+import ReactDOM from 'react-dom';
+import Button from './Button';
+const Modal = ({ isOpen, onClose, elements }) => {
   const dialogRef = useRef(null);
-    console.log(isOpen)
-  useEffect(() => {
+
+    useEffect(() => {
     if (isOpen) {
       dialogRef.current.showModal(); // open
     } else {
@@ -14,13 +15,35 @@ const Modal = ({ isOpen, onClose, message }) => {
       dialogRef.current?.close(); 
         };
     }, [isOpen]);
-    return (
-    <dialog ref={dialogRef} className="modal">
-        <h2>Veateade</h2>
-        <p>{message}</p>
-        <button onClick={onClose}>Sulge</button>
-    </dialog>
-    )
+
+
+    const renderItems = () => {
+        return elements.map(item => (
+          <li key={item.id} className='cart-item'>
+            <p>{item.name} - {item.quantity}</p>
+          </li>
+        ));
+    };
+
+    const totalSum = elements.reduce((total, item) => total + item.price * item.quantity, 0);
+    return ReactDOM.createPortal(
+        <dialog ref={dialogRef} className="modal cart">
+          <h2>Cart Items</h2>
+          {elements.length > 0 ? (
+            <ul>
+            {renderItems()}
+            </ul>
+          ) : (
+            <p>Cart is empty!</p>
+          )}
+          <p className='cart-total'>
+          {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(totalSum,)}
+            </p>
+          <Button textOnly={true} onClick={onClose} children={`Close`} />
+          <Button textOnly={false} onClick={() => console.log('checkout')} children={`Checkout`} />
+        </dialog>,
+        document.querySelector('#modal')
+      );
 };
 
 export default Modal;
