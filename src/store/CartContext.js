@@ -1,31 +1,70 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useReducer } from 'react';
 
-const Cart = createContext({
+// const Cart = createContext({
+//   items: [],
+//   addItem: () => {},
+//   removeItem: () => {},
+//   clearCart: () => {},
+// });
+
+const defaultCartState = {
   items: [],
-  addItem: () => {},
-  removeItem: () => {},
-  clearCart: () => {},
-});
+};
+
+const cartReducer = (state, action) => {
+  switch (action.type) {
+    case 'ADD_ITEM': {
+    const existingItemIndex = state.items.findIndex(item => item.id === action.item.id);
+
+      if (existingItemIndex !== -1) {
+        const updatedItems = [...state.items];
+        // update 
+        updatedItems[existingItemIndex] = {
+          ...updatedItems[existingItemIndex],  
+          quantity: updatedItems[existingItemIndex].quantity + 1,
+        };
+        return { items: updatedItems };
+      } else {
+        return { items: [...state.items, { ...action.item, quantity: 1 }] }; // add first
+      }
+    }
+
+    case 'REMOVE_ITEM': {
+      const updatedItems = state.items.filter(item => item.id !== action.id);
+      return { items: updatedItems };
+    }
+
+    case 'CLEAR_CART':
+      return { items: [] };
+
+    default:
+      return state;
+  }
+};
+
+const Cart = createContext();
 
 export const CartFunc = ({children}) => {
-  const [items, setItems] = useState([]);
+  const [itemsState, dispItems] = useReducer(cartReducer, defaultCartState);
 
-  console.log(items)
+  console.log(itemsState)
 
   const addItem = (item) => {
-    setItems((prevItems) => [...prevItems, item]);
+    // setItems((prevItems) => [...prevItems, item]);
+    dispItems({ type: 'ADD_ITEM', item });
   };
 
   const removeItem = (id) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    // setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    dispItems({ type: 'REMOVE_ITEM', id })
   };
 
   const clearCart = () => {
-    setItems([]);
+    dispItems({ type: 'CLEAR_CART' });
   };
 
   return (
-    <Cart.Provider value={{ items, addItem, removeItem, clearCart }}>
+    <Cart.Provider value={{ items: itemsState.items, addItem, removeItem, clearCart }}>
       {children}
     </Cart.Provider>
   );
