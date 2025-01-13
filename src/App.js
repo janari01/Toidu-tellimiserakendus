@@ -1,11 +1,14 @@
 import Meals from "./components/Meals";
 import Header from "./components/Header";
+import { CartFunc } from "./store/CartContext";
 
 const App = () => {
  return (
     <>
-    <Header />
-    <Meals />
+    <CartFunc>
+      <Header />
+      <Meals />
+    </CartFunc>
     </>
   );
 }
