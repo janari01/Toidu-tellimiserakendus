@@ -1,3 +1,5 @@
+import Button from "./UI/Button"
+
 const MealItem = ({meal}) => {
     return (
         <li className="meal-item">
@@ -5,7 +7,7 @@ const MealItem = ({meal}) => {
                 <img src={require(`../assets/${meal.image}`)} alt={meal.name}/>
                 <div>
                     <h3>{meal.name}</h3>
-                    
+
                     <p className="meal-item-price">
                         {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(meal.price,)}
                     </p>
@@ -13,7 +15,7 @@ const MealItem = ({meal}) => {
                     <p className="meal-item-description">{meal.description}</p>
                 </div>
                 <p>
-                    <button >Add to Cart</button>
+                    <Button textOnly={false} onClick={() => console.log('click, yes, very much')} children={'Add to cart'} />
                 </p>
             </article>
         </li>
